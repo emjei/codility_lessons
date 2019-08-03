@@ -59,7 +59,8 @@ class Solution {
         return size;
     }
 
-    private boolean isPeak(int[] A, int i) {
-        return i > 0 && i < A.length - 1 && A[i] > A[i-1] && A[i] > A[i+1];
+    private boolean isPeak(int[] heights, int i) {
+        if (i == 0 || i == heights.length - 1) return false;
+        return heights[i] > heights[i-1] && heights[i] > heights[i+1];
     }
 }
