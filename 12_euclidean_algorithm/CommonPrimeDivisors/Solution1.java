@@ -1,6 +1,8 @@
 import java.util.HashSet;
 import java.util.Set;
 
+/* This solution seems overly complex and uses memory for factorization sieve.
+ * However, it works great for random values. */
 class Solution {
     public int solution(int[] A, int[] B) {
         return samePrimeDivisorSets(A, B);
