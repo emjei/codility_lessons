@@ -7,9 +7,9 @@ class Solution {
 
     private int equiLeaderCount(int[] integers) {
         int equiLeaderCount = 0;
-        int leader = findLeader(integers);
+        Integer leader = leader(integers);
 
-        if (leader != -1) {
+        if (leader != null) {
             int total = totalCount(integers, leader);
             int[] counts = leaderCounts(integers, leader);
 
@@ -24,7 +24,7 @@ class Solution {
         return equiLeaderCount;
     }
 
-    private int findLeader(int[] integers) {
+    private Integer leader(int[] integers) {
         int[] sorted = new int[integers.length];
         System.arraycopy(integers, 0, sorted, 0, integers.length);
         Arrays.sort(sorted);
@@ -33,7 +33,7 @@ class Solution {
         int count = 0;
         for (int el : sorted) if (el == candidate) count++;
 
-        return (count > sorted.length / 2) ? candidate : -1;
+        return (count > sorted.length / 2) ? candidate : null;
     }
 
     private int totalCount(int[] integers, int leader) {
