@@ -1,8 +1,7 @@
 import java.util.HashSet;
 import java.util.Set;
 
-/* This solution seems overly complex and uses memory for factorization sieve.
- * However, it works great for random values. */
+/* This solution seems overly complex but seems like the optimal one. */
 class Solution {
     public int solution(int[] A, int[] B) {
         return samePrimeDivisorSets(A, B);
@@ -10,7 +9,6 @@ class Solution {
 
     private int samePrimeDivisorSets(int[] a, int[] b) {
         int count = 0;
-
         for (int i = 0; i < a.length; ++i) {
             if (hasSameDivisorSets(a[i], b[i])) count++;
         }
@@ -28,39 +26,20 @@ class Solution {
         int minB = b / gcd;
 
         if (gcd > Math.max(minA, minB)) {
-            int[] factorizationSieve = generateFactorizationSieve(Math.max(minA, minB));
-
-            Set<Integer> aDivisors = primeDivisors(factorizationSieve, minA);
-            for (Integer el : aDivisors) if (gcd % el != 0) return false;
-
-            Set<Integer> bDivisors = primeDivisors(factorizationSieve, minB);
-            for (Integer el : bDivisors) if (gcd % el != 0) return false;
+            for (int divisor : primeDivisors(minA)) if (gcd % divisor != 0) return false;
+            for (int divisor : primeDivisors(minB)) if (gcd % divisor != 0) return false;
 
             return true;
         } else {
-            int[] factorizationSieve = generateFactorizationSieve(gcd);
-
             int resultA = minA;
             int resultB = minB;
-            for (int divisor : primeDivisors(factorizationSieve, gcd)) {
-                while (resultA % divisor == 0) resultA /= divisor;
+            for (int divisor : primeDivisors(gcd)) {
+                while (resultA % divisor== 0) resultA /= divisor;
                 while (resultB % divisor == 0) resultB /= divisor;
             }
 
             return resultA == 1 && resultB == 1;
         }
-    }
-
-    private Set<Integer> primeDivisors(int[] factorizationSieve, int a) {
-        Set<Integer> divisors = new HashSet<>();
-
-        while (factorizationSieve[a] > 0) {
-            divisors.add(factorizationSieve[a]);
-            a /= factorizationSieve[a];
-        }
-        divisors.add(a);
-
-        return divisors;
     }
 
     private int gcd(int a, int b) {
@@ -71,17 +50,19 @@ class Solution {
         }
     }
 
-    private int[] generateFactorizationSieve(int n) {
-        int[] sieve = new int[n + 1];
+    private Set<Integer> primeDivisors(int n) {
+        Set<Integer> divisors = new HashSet<>();
 
-        for (int i = 2; i * i <= n; i++) {
-            if (sieve[i] != 0) continue;
+        int i = 2;
+        int result = n;
+        while ((long) i * i <= result) {
+            if (result % i == 0) divisors.add(i);
+            while (result % i == 0) result /= i;
 
-            for (int k = i * i; k <= n; k += i) {
-                if (sieve[k] == 0) sieve[k] = i;
-            }
+            i++;
         }
+        if (result != 1) divisors.add(result);
 
-        return sieve;
+        return divisors;
     }
 }
